@@ -1,0 +1,67 @@
+@startuml yonde
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "bom" as bom {
+  + uuid [FK]
+  --
+  tool
+  format
+}
+
+entity "components" as components {
+  + bomref [PK]
+  + purl [PK]
+  --
+  name
+  version
+  cpe
+}
+
+entity "vulnerabilities" as vulnerabilities {
+  + vulns_id [FK]
+  --
+  cvss
+  score
+  severity
+}
+
+entity "component_vulnerabilities" as component_vulnerabilities {
+  + bomref [PK]
+  + purl [PK]
+  --
+  name
+  version
+  vulns_id [FK]
+  fixed_version
+  uuid [FK]
+}
+ 
+' entity "packages" as packages {
+'   + id: text [PK]
+'   --
+'   type: text
+'   name: text
+'   version: text
+'   file_name: text
+'   url_home: text
+'   url_download: text
+'   licenses: json
+'   license_concluded: text
+'   license_comments: text
+'   copyright: text
+'   source_info: text
+'   comment: text
+'   summary: text
+'   description: text
+'   release_date: datetime
+'   build_date: datetime
+'   valid_until_date: datetime
+'   attribution: json
+'   file_types: json
+' }
+
+@enduml
