@@ -1,1 +1,1 @@
-# SCompGuardian
+# ComGu (CompGuardian)
