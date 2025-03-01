@@ -1,67 +1,44 @@
-@startuml yonde
-' hide the spot
-hide circle
+@startuml sbom
 
-' avoid problems with angled crows feet
-skinparam linetype ortho
+' 定義：テーブルを表すステレオタイプを追加
+!define TABLE(x) class x << (T,#FFAAAA) >>
 
-entity "bom" as bom {
-  + uuid [FK]
+TABLE(Bom) {
+  * uuid : TEXT <<PK>>
   --
-  tool
-  format
+  tool : TEXT
+  format : TEXT
 }
 
-entity "components" as components {
-  + bomref [PK]
-  + purl [PK]
+TABLE(Metadata) {
+  * bomref : TEXT <<PK>>
+  * purl : TEXT <<PK>>
   --
-  name
-  version
-  cpe
+  name : TEXT
+  version : TEXT
+  cpe : TEXT
 }
 
-entity "vulnerabilities" as vulnerabilities {
-  + vulns_id [FK]
+TABLE(Vulnerabilities) {
+  * vulns_id : TEXT <<PK>>
   --
-  cvss
-  score
-  severity
+  cvss : TEXT
+  score : REAL
+  severity : TEXT
 }
 
-entity "component_vulnerabilities" as component_vulnerabilities {
-  + bomref [PK]
-  + purl [PK]
+TABLE(Packages) {
+  * bomref : TEXT <<PK>>
+  * purl : TEXT <<PK>>
+  * vulns_id : TEXT <<PK>>
+  * uuid : TEXT <<PK>>
   --
-  name
-  version
-  vulns_id [FK]
-  fixed_version
-  uuid [FK]
+  fixed_version : TEXT
 }
- 
-' entity "packages" as packages {
-'   + id: text [PK]
-'   --
-'   type: text
-'   name: text
-'   version: text
-'   file_name: text
-'   url_home: text
-'   url_download: text
-'   licenses: json
-'   license_concluded: text
-'   license_comments: text
-'   copyright: text
-'   source_info: text
-'   comment: text
-'   summary: text
-'   description: text
-'   release_date: datetime
-'   build_date: datetime
-'   valid_until_date: datetime
-'   attribution: json
-'   file_types: json
-' }
+
+' リレーション定義
+Bom "1" -- "0..*" Packages : "uuid"
+Metadata "1" -- "0..*" Packages : "(bomref, purl)"
+Vulnerabilities "1" -- "0..*" Packages : "vulns_id"
 
 @enduml
